@@ -44,4 +44,4 @@ def convert_to_latex(input_file, output_file):
         file.write("\n".join(latex_lines))
 
 if __name__ == "__main__":
-    convert_to_latex("input.txt", "output.tex")
+    convert_to_latex("README.md", "output.tex")
