@@ -15,20 +15,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
+    - name: Run LaTeX in Docker
+      uses: addnab/docker-run-action@v3
       with:
-        python-version: '3.9'
-
-    - name: Install LaTeX
-      run: sudo apt-get update && sudo apt-get install -y texlive texlive-latex-extra
-
-    - name: Convert text to LaTeX
-      run: |
-        python3 convert_to_latex.py README.md output.tex
-
-    - name: Build PDF
-      run: pdflatex output.tex
+        image: texlive/texlive:latest
+        options: --rm
+        run: |
+          pdflatex -interaction=nonstopmode output.tex
 
     - name: Upload PDF
       uses: actions/upload-artifact@v3
