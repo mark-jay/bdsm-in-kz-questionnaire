@@ -28,6 +28,7 @@ jobs:
         image: texlive/texlive:latest
         options: --rm
         run: |
+          ls -l output.tex # Убедимся, что файл передан в шаг
           tlmgr install babel-russian
           pdflatex -interaction=nonstopmode output.tex
           pdflatex -interaction=nonstopmode output.tex # Двойной запуск для корректного рендеринга
