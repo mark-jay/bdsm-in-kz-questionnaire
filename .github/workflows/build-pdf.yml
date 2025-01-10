@@ -15,6 +15,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Convert text to LaTeX
+      run: |
+        python3 convert_to_latex.py README.md output.tex
+
     - name: Run LaTeX in Docker
       uses: addnab/docker-run-action@v3
       with:
@@ -23,6 +27,7 @@ jobs:
         run: |
           tlmgr install babel-russian
           pdflatex -interaction=nonstopmode output.tex
+          pdflatex -interaction=nonstopmode output.tex # Двойной запуск для корректного рендеринга
 
     - name: Upload PDF
       uses: actions/upload-artifact@v3
