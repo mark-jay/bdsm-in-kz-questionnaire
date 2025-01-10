@@ -3,7 +3,7 @@ name: Build PDF from Text
 on:
   push:
     paths:
-      - "input.txt"
+      - "README.md"
 
 jobs:
   build-pdf:
@@ -23,7 +23,7 @@ jobs:
 
     - name: Convert text to LaTeX
       run: |
-        python3 convert_to_latex.py input.txt output.tex
+        python3 convert_to_latex.py README.md output.tex
 
     - name: Build PDF
       run: pdflatex output.tex
