@@ -18,7 +18,10 @@ jobs:
     - name: Convert text to LaTeX
       run: |
         python3 convert_to_latex.py README.md output.tex
-
+    
+    - name: Verify output.tex exists
+      run: ls -l output.tex
+  
     - name: Run LaTeX in Docker
       uses: addnab/docker-run-action@v3
       with:
