@@ -13,6 +13,12 @@ def convert_to_latex(input_file, output_file):
         r"\usepackage{multicol}",
         r"\usepackage{graphicx}",
         r"\usepackage{amssymb}",  # Для использования квадратных чекбоксов
+
+        # темная тема
+        r"\usepackage{xcolor}",  # Пакет для работы с цветами
+        r"\pagecolor{black}",  # Цвет фона на темный (черный)
+        r"\color{white}",  # Цвет текста белый
+
         r"\renewcommand{\baselinestretch}{0.5}",  # Уменьшен межстрочный интервал
         r"\setlength{\itemsep}{0pt}",  # Убираем отступы между элементами списка
         r"\pagestyle{empty}",
