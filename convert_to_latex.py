@@ -5,13 +5,24 @@ def convert_to_latex(input_file, output_file):
         lines = file.readlines()
 
     latex_lines = [
-        r"\documentclass[a4paper,12pt]{article}",
+        r"\documentclass[a4paper,10pt]{article}",
         r"\usepackage[utf8]{inputenc}",
         r"\usepackage[russian]{babel}",
         r"\usepackage{geometry}",
-        r"\geometry{a4paper, margin=1in}",
-        r"\begin{document}",
-        r"\section*{Анкета для практики}"
+        r"\geometry{a4paper, margin=0.125in}",  # Уменьшен padding в 4 раза
+        r"\usepackage{multicol}",
+        r"\usepackage{graphicx}",
+        r"\usepackage{amssymb}",  # Для использования квадратных чекбоксов
+        r"\renewcommand{\baselinestretch}{0.5}",  # Уменьшен межстрочный интервал
+        r"\setlength{\itemsep}{0pt}",  # Убираем отступы между элементами списка
+        r"\pagestyle{empty}",
+#        r"\setlength\parindent{0pt}",
+        r"\begin{document}"
+    ]
+
+    # Generate the content for one quarter
+    quarter_content = [
+        r"\section*{\scriptsize Анкета для практики}"  # Уменьшен шрифт
     ]
 
     current_section = None
@@ -20,23 +31,58 @@ def convert_to_latex(input_file, output_file):
         line = line.strip()
         if line.startswith("### "):  # Раздел
             if current_section:
-                latex_lines.append(r"\end{itemize}")
+                quarter_content.append(r"\vskip 0.2cm")  # Уменьшен отступ между разделами
             current_section = line[4:]
-            latex_lines.append(rf"\section*{{{current_section}}}")
-            latex_lines.append(r"\begin{itemize}")
+            quarter_content.append(rf"\section*{{\scriptsize {current_section}}}")  # Уменьшен шрифт
+            quarter_content.append(r"\vskip 0.1cm")  # Дополнительный отступ после названия раздела
         elif line.startswith("#### "):  # Вопрос
             question = line[5:]
             match = re.match(r"(.*?)\((.*?)\)", question)
             if match:
                 question_text, options = match.groups()
-                latex_lines.append(rf"\item {question_text.strip()} ({options.strip()})")
+                # Просто добавляем текст без разбивки
+                quarter_content.append(rf"\scriptsize \noindent {question_text.strip()} ({options.strip()})")  # Уменьшен шрифт
             else:
-                latex_lines.append(rf"\item {question}")
+                # Просто добавляем текст без разбивки
+                quarter_content.append(rf"\scriptsize \noindent {question}")  # Уменьшен шрифт
+
+            # Размещение чекбоксов справа с уменьшенным расстоянием между ними
+            quarter_content.append(r"\noindent \hfill \scriptsize $\square$ Да \hspace{0.1cm} $\square$ Нет")  # Уменьшено расстояние
+            quarter_content.append(r"\\")  # Явный переход на новую строку
+            quarter_content.append(r"\vskip 0.1cm")  # Уменьшен отступ между вопросом и следующей строкой
         elif line:  # Примечания, игнорируем
             pass
 
-    if current_section:
-        latex_lines.append(r"\end{itemize}")
+    # Combine the quarters on a single page in two columns
+    latex_lines.append(r"\begin{multicols}{2}")  # Использование двух колонок
+
+    latex_lines.append(r"\noindent\begin{minipage}{0.5\textwidth}\centering")
+    latex_lines.append(r"\vskip 0.5cm")  # Уменьшен вертикальный отступ перед секцией
+    latex_lines.extend(quarter_content)
+    latex_lines.append(r"\end{minipage}%")
+
+    latex_lines.append(r"\hspace{0.5cm}")  # Уменьшен горизонтальный отступ между секциями
+
+    latex_lines.append(r"\begin{minipage}{0.5\textwidth}\centering")
+    latex_lines.append(r"\vskip 0.5cm")  # Уменьшен вертикальный отступ перед секцией
+    latex_lines.extend(quarter_content)
+    latex_lines.append(r"\end{minipage}")
+
+    latex_lines.append(r"\vskip 1cm")  # Уменьшен отступ между секциями
+
+    latex_lines.append(r"\noindent\begin{minipage}{0.5\textwidth}\centering")
+    latex_lines.append(r"\vskip 0.5cm")  # Уменьшен вертикальный отступ перед секцией
+    latex_lines.extend(quarter_content)
+    latex_lines.append(r"\end{minipage}%")
+
+    latex_lines.append(r"\hspace{0.5cm}")  # Уменьшен горизонтальный отступ между секциями
+
+    latex_lines.append(r"\begin{minipage}{0.5\textwidth}\centering")
+    latex_lines.append(r"\vskip 0.5cm")  # Уменьшен вертикальный отступ перед секцией
+    latex_lines.extend(quarter_content)
+    latex_lines.append(r"\end{minipage}")
+
+    latex_lines.append(r"\end{multicols}")  # Закрытие многоколоночного окружения
 
     latex_lines.append(r"\end{document}")
 

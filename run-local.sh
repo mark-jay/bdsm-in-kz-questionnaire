@@ -7,7 +7,8 @@ set -e
 README_FILE="README.md"
 TEX_FILE="output.tex"
 PDF_FILE="output.pdf"
-DOCKER_IMAGE="texlive/texlive:latest"
+# 13:50:11-mark~(master)$ docker inspect --format='{{index .RepoDigests 0}}' texlive/texlive:latest
+DOCKER_IMAGE="texlive/texlive:latest@sha256:c145e9c620c054df1e5c885c588b081b200707f151bf7a6693a591cc364d60ad"
 WORKSPACE=$(pwd)
 
 # Step 1: Ensure README.md exists
